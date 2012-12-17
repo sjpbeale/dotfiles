@@ -17,7 +17,7 @@ is a good idea, since:
 
 ```
 cd ~
-wget -O - https://raw.github.com/mamchenkov/dotfiles/master/bin/dotfiles-install.sh | /bin/bash
+wget -O - https://raw.github.com/sam-ez4x/dotfiles/master/bin/dotfiles-install.sh | /bin/bash
 source .bashrc
 ```
 
