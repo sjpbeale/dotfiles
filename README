@@ -1,4 +1,0 @@
-cd ~
-git clone git://github.com/sam-ezfx/dotfiles.git dotfiles
-ln -s dotfiles/bashrc .bashrc
-ln -s dotfiles/gitconfig .gitconfig
