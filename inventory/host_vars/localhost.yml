@@ -102,7 +102,7 @@ desktop_packages:
 # - http://docs.ansible.com/ansible/get_url_module.html
 desktop_downloads:
   # Gravatar image login/screensaver lock/etc
-  - { url: "https://s.gravatar.com/avatar/54bfadc28c22bf76402608db646cd031?s=100", dest: "~/.face" }
+  - { url: "https://en.gravatar.com/userimage/142203235/745747d36f2298fef3ab3f30e89cae79.jpg?size=100", dest: "~/.face" }
 
 # Development packages to be installed on development workstations
 # For parameters see:
