@@ -7,37 +7,30 @@ for bash shell, git version control, and Vim text editor.
 Installation
 ------------
 
-Download and run the install script, which will fetch all the necessary modules and create
-all the necessary links.  Switching to your home directory and backing up your current setup
-is a good idea, since:
-
-1. The installation script will create symlinks in your CURRENT directory.
-2. The installation script will remove necessary files in your CURRENT directory.
-
+Clone the repository:
 
 ```
-cd ~
-wget -O - https://raw.github.com/sam-ez4x/dotfiles/master/bin/dotfiles-install.sh | /bin/bash
-source .bashrc
+$ git clone https://github.com/sam-ez4x/dotfiles.git
+$ cd dotfiles
 ```
 
-Known Issues
-------------
+**DANGER** This will overwrite your current dot files!
 
-### Missing bash completions
-
-```
--bash: __git_ps1: command not found
-```
-
-If you see the above message after installation, you are missing bash completions.  Gladly, the issue
-is easily solved by installing bash-completion package.  On Fedora / Red Hat / CentOS do the following:
+Run Ansible
 
 ```
-$ sudo yum install bash-completion
+$ ansible-playbook all.yml --ask-sudo-pass 
 ```
 
-Once the package is installed, exit your current bash shell and start a new instance.
+You can skip package installations and/or network operations (Vim plugins cloning, etc)
+with something like:
+
+```
+$ ansible-playbook all.yml --skip-tags="network,packages"
+```
+
+If you want to install/configure only certain parts, replace `all.yml` in the commands
+above with of the other playbooks.
 
 Features
 --------
@@ -52,11 +45,9 @@ Here is a brief overview of some of the features hidden deep in these dotfiles.
 	background color from blue to red, when working as root user, provided you have installed dotfiles for both
 	your normal user and root.
 2.	Support for 256 color terminals.
-3.	System information on shell start, including hostname, distribution name and version, IP address, load average,
-	number of current processes, available and total disk space, and simplified uptime.
-4.	For root user, an automatically initialized local git repository in /etc folder, with automatic commits of all
+3.	For root user, an automatically initialized local git repository in /etc folder, with automatic commits of all
 	changes upon logout.
-5.  Colors for man pages.
+4.  Colors for man pages.
 
 ### Git version control
 
@@ -73,8 +64,7 @@ Here is a brief overview of some of the features hidden deep in these dotfiles.
 
 ### Miscelanous
 
-1. 	Easier installer, which can also be used to update the setup and all the symlinks.
-2.  MySQL prompt that includes current user, host, and selected database.
+*  MySQL prompt that includes current user, host, and selected database.
 
 Feedback
 --------

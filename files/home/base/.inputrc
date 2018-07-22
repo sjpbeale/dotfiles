@@ -1,0 +1,72 @@
+# GNU Readline configuration
+#
+# For more information, have a look here:
+# https://www.gnu.org/software/bash/manual/html_node/Readline-Init-File-Syntax.html#Readline-Init-File-Syntax
+
+#
+# Defaults and globals
+#
+
+# Include system-wide configuration first
+$include /etc/inputrc
+
+# Set Vi editing mode
+set editing-mode vi
+
+#
+# Smarter tab completion
+#
+
+# Perform file completion in a case insensitive fashion
+set completion-ignore-case on
+# Treat hyphens and underscores as equivalent
+set completion-map-case on
+# Display matches for ambiguous patterns at first tab press
+set show-all-if-ambiguous on
+# Immediately add a trailing slash when autocompleting symlinks to directories
+set mark-symlinked-directories on
+# Do not autocomplete hidden files unless the pattern explicitly begins with a dot
+set match-hidden-files off
+# Show extra file information when completing, like `ls -F` does
+set visible-stats on
+
+# Be more intelligent when autocompleting by also looking at the text after
+# the cursor. For example, when the current line is "cd ~/src/mozil", and
+# the cursor is on the "z", pressing Tab will not autocomplete it to "cd
+# ~/src/mozillail", but to "cd ~/src/mozilla". (This is supported by the
+# Readline used by Bash 4.)
+set skip-completed-text on
+
+#
+# Incremental history search with up/down arrows
+# Learn more about this here: 
+# http://codeinthehole.com/writing/the-most-important-command-line-tip-incremental-history-searching-with-inputrc/
+#
+
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\e[C": forward-char
+"\e[D": backward-char
+
+#
+# Allow UTF-8 input and output, instead of showing stuff like $'\0123\0456'
+#
+set input-meta on
+set output-meta on
+set convert-meta off
+
+#
+# Visual hints
+#
+
+# Briefly jump to a matching parenthesis
+set blink-matching-paren on
+
+# Use visual bell
+set bell-style visible
+
+#
+# Other mappings
+#
+
+"\C-w": backward-kill-word
