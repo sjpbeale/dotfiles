@@ -266,7 +266,7 @@ function fancyprompt {
 		PROMPT_COLOR=$IRed
 		FEEL_COLOR=$IBlack
 	else
-		USER_COLOR=$Cyan
+		USER_COLOR=$White
 		PROMPT_COLOR=$IWhite
 		FEEL_COLOR=$IBlack
 	fi
