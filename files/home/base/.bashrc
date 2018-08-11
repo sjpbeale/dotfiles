@@ -266,7 +266,7 @@ function fancyprompt {
 		PROMPT_COLOR=$IRed
 		FEEL_COLOR=$IBlack
 	else
-		USER_COLOR=$Green
+		USER_COLOR=$Cyan
 		PROMPT_COLOR=$IWhite
 		FEEL_COLOR=$IBlack
 	fi
@@ -278,7 +278,7 @@ function fancyprompt {
 	LOAD=$(printf "%.0f" $ONE)
 	if [ "$LOAD" -lt "$CPUS" ]
 	then 
-		LOAD_COLOR=$Green
+		LOAD_COLOR=$Cyan
 	elif [ "$LOAD" -eq "$CPUS" ]
 	then 
 		LOAD_COLOR=$IYellow
@@ -289,7 +289,7 @@ function fancyprompt {
 	# localhost|localdomain hostnames are green, as well as anything with .ppl. (people)
 	if [[ $HOSTNAME =~ "localhost" || $HOSTNAME =~ "localdomain" || $HOSTNAME =~ ".ppl." ]]
 	then
-		HOST_COLOR=$Green
+		HOST_COLOR=$Cyan
 	# .com|.org|.net hostnames are bright red
 	elif [[ $HOSTNAME =~ ".com" || $HOSTNAME =~ ".org" || $HOSTNAME =~ ".net" ]]
 	then
@@ -312,20 +312,20 @@ function fancyprompt {
 			then
 				GIT_BRANCH_COLOR=$IYellow
 			else
-				GIT_BRANCH_COLOR=$Purple
+				GIT_BRANCH_COLOR=$ICyan
 		fi
 		GIT_BRANCH="$FEEL_COLOR⑂${GIT_BRANCH_COLOR}$GIT_BRANCH$GIT_DIRTY$FEEL_COLOR"
 	fi
 
 
 	# Terminal title and new online separator for each prompt
-	PS1="$(terminal_title)\n"
+	PS1="$(terminal_title)"
 	# Time with color by load
 	PS1="$PS1$FEEL_COLOR[$LOAD_COLOR\t$FEEL_COLOR|"
 	# User with color by username at host with color by hostname
 	PS1="$PS1$USER_COLOR\u$FEEL_COLOR@$HOST_COLOR\H$FEEL_COLOR:"
 	# Current folder and git branch with color by branch name and modified
-	PS1="$PS1$IBlue\w$GIT_BRANCH$FEEL_COLOR]"
+	PS1="$PS1$White\w$GIT_BRANCH$FEEL_COLOR]"
 	# Prompt with color by last status
 	PS1="$PS1${LAST_COLOR}${LAST_SYMBOL}${FEEL_COLOR} $Color_Off"
 
