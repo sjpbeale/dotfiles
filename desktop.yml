@@ -3,6 +3,7 @@
 ---
 - name: Desktop setup
   hosts: localhost
+  become: yes
   pre_tasks:
 
     - name: Install desktop tools
