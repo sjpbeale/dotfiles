@@ -30,3 +30,4 @@
 
   roles:
     - cmprescott.chrome
+    - jaredhocutt.slack

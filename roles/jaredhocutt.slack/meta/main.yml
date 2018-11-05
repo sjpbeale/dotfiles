@@ -1,0 +1,14 @@
+galaxy_info:
+  role_name: slack
+  author: Jared Hocutt
+  description: Adds the Slack yum repository and installs Slack.
+
+  license: BSD
+
+  min_ansible_version: 2.1
+
+  platforms:
+  - name: Fedora
+    versions:
+    - 27
+    - 28

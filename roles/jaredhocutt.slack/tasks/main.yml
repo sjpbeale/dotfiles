@@ -1,0 +1,17 @@
+---
+
+- name: Create yum repository
+  yum_repository:
+    name: slack
+    description: Slack - $basearch
+    baseurl: https://packagecloud.io/slacktechnologies/slack/fedora/21/$basearch
+    enabled: yes
+    gpgcheck: no
+    state: present
+  become: yes
+
+- name: Install Slack
+  dnf:
+    name: slack
+    state: present
+  become: yes
