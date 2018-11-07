@@ -131,6 +131,7 @@ devel_packages:
   # MySQL/MariaDB
   - { name: "mariadb", state: "{{ package_state_default }}" }
   - { name: "mariadb-server", state: "{{ package_state_default }}" }
+  - { name: "mycli", state: "{{ package_state_default }}" }
 
 # geerlingguy.composer : Put in /usr/bin/
 composer_path: /usr/bin/composer
