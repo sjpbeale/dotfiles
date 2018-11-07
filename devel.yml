@@ -16,5 +16,8 @@
     - name: Start MariaDB service
       service: name=mariadb state=started enabled=true
 
+    - name: Start MongoDB service
+      service: name=mongod state=started enabled=true
+
   roles:
     - geerlingguy.composer
