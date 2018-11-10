@@ -1,0 +1,6 @@
+---
+# tasks file for sjpbeale.skype
+
+- include: setup-dnf.yml
+  when: ansible_pkg_mgr == 'dnf'
+
