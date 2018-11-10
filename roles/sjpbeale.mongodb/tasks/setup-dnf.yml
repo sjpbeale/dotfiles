@@ -12,7 +12,7 @@
   sudo: yes
   template:
     src: mongo.repo.j2
-    dest: /etc/yum.repos.d/mongodb.repo
+    dest: /etc/yum.repos.d/mongodb-org-{{ mongodb_version }}.repo
     owner: root
     group: root
     mode: 0644
