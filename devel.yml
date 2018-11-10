@@ -13,11 +13,13 @@
       vars:
         rpms: "{{ devel_packages }}"
 
+  roles:
+    - role: geerlingguy.composer
+    - role: sjpbeale.mongodb
+      mongodb_version: 3.2
+
+  post_tasks:
+
     - name: Start MariaDB service
       service: name=mariadb state=started enabled=true
 
-    - name: Start MongoDB service
-      service: name=mongod state=started enabled=true
-
-  roles:
-    - geerlingguy.composer
