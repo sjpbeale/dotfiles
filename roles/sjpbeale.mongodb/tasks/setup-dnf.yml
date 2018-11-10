@@ -1,6 +1,6 @@
 # dnf tasks file for sjpbeale.mongodb
 
-- name: "MongoDB: Check Version Valid"
+- name: "Check version valid"
   uri:
     url: https://repo.mongodb.org/yum/redhat/7/mongodb-org/{{ mongodb_version }}/x86_64/
     return_content: yes
@@ -8,7 +8,7 @@
   failed_when: http_response.status != 200
   run_once: true
 
-- name: "MongoDB: Ensure Repo Present"
+- name: "Ensure repo present"
   sudo: yes
   template:
     src: mongo.repo.j2
@@ -17,9 +17,9 @@
     group: root
     mode: 0644
 
-- name: "MongoDB: Ensure Installed and Running"
+- name: "Ensure installed"
   sudo: yes
   dnf: name=mongodb-org
 
-- name: "MongoDB: Start Service"
+- name: "Start service"
   service: name=mongod state=started enabled=true
