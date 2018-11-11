@@ -1,0 +1,6 @@
+---
+# tasks file for sjpbeale.teamviewer
+
+- include: setup-dnf.yml
+  when: ansible_pkg_mgr == 'dnf'
+

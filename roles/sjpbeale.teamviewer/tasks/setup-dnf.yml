@@ -1,0 +1,12 @@
+---
+# tasks file for sjpbeale.teamviewer
+
+- name: "Ensure TeamViewer repo present"
+  sudo: yes
+  copy: src=teamviewer.repo
+        dest=/etc/yum.repos.d/
+        owner=root group=root mode=0644
+
+- name: "Ensure TeamViewer present"
+  sudo: yes
+  dnf: name=teamviewer

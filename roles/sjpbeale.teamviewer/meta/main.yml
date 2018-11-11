@@ -1,0 +1,16 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Sam Beale
+  description: Install Teamviewer
+  license: BSD
+  min_ansible_version: 2.4
+  role_name: teamviewer
+  platforms:
+  - name: Fedora
+    versions:
+    - 28
+  galaxy_tags:
+    - networking
+    - rdp
