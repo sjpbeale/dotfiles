@@ -1,0 +1,12 @@
+---
+# tasks file for sjpbeale.spotify
+
+- name: "Ensure Spotify repo present"
+  sudo: yes
+  copy: src=fedora-spotify.repo
+        dest=/etc/yum.repos.d/
+        owner=root group=root mode=0644
+
+- name: "Ensure Spotify present"
+  sudo: yes
+  dnf: name=spotify-client

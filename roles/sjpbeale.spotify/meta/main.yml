@@ -1,0 +1,16 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Sam Beale
+  description: Install Spotify
+  license: BSD
+  min_ansible_version: 2.4
+  role_name: skype
+  platforms:
+  - name: Fedora
+    versions:
+    - 28
+  galaxy_tags:
+    - music
+    - streaming
