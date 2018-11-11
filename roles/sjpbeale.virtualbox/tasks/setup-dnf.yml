@@ -1,0 +1,13 @@
+---
+# tasks file for sjpbeale.virtualbox
+
+- name: "Ensure VirtualBox repo present"
+  sudo: yes
+  copy: src=virtualbox.repo
+        dest=/etc/yum.repos.d/
+        owner=root group=root mode=0644
+
+- name: "Ensure VirtualBox present"
+  sudo: yes
+  dnf: name=VirtualBox
+

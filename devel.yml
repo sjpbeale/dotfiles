@@ -17,6 +17,7 @@
     - role: geerlingguy.composer
     - role: sjpbeale.mongodb
       mongodb_version: 3.2
+    - role: sjpbeale.virtualbox
 
   post_tasks:
 
