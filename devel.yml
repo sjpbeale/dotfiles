@@ -15,6 +15,7 @@
 
   roles:
     - role: geerlingguy.composer
+    - role: geerlingguy.redis
     - role: sjpbeale.mongodb
       mongodb_version: 3.2
     - role: sjpbeale.virtualbox
