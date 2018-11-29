@@ -114,8 +114,3 @@ devel_packages:
   # NodeJS/Npm
   - { name: "nodejs", state: "{{ package_state_default }}" }
 
-# geerlingguy.composer : Put in /usr/bin/
-composer_path: /usr/bin/composer
-# geerlingguy.composer : Keep updated to prevent outdated warnings
-composer_keep_updated: true
-
