@@ -18,6 +18,7 @@ base_packages:
   - { name: "mc", state: "{{ package_state_default }}" }
   - { name: "mutt", state: "{{ package_state_default }}" }
   - { name: "sysstat", state: "{{ package_state_default }}" }
+  - { name: "ncdu", state: "{{ package_state_default }}" }
   # Networking
   - { name: "mtr", state: "{{ package_state_default }}" }
   - { name: "tcpdump", state: "{{ package_state_default }}" }
