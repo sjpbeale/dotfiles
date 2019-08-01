@@ -19,6 +19,7 @@
       composer_home_path: '~/.config/composer'
       composer_keep_updated: true
     - role: geerlingguy.redis
+    - role: geerlingguy.memcached
     - role: sjpbeale.mongodb
       mongodb_version: 3.2
     - role: sjpbeale.virtualbox
