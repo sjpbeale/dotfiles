@@ -19,6 +19,7 @@ base_packages:
   - { name: "mutt", state: "{{ package_state_default }}" }
   - { name: "sysstat", state: "{{ package_state_default }}" }
   - { name: "ncdu", state: "{{ package_state_default }}" }
+  - { name: "jq", state: "{{ package_state_default }}" }
   # Networking
   - { name: "mtr", state: "{{ package_state_default }}" }
   - { name: "tcpdump", state: "{{ package_state_default }}" }
@@ -105,6 +106,8 @@ devel_packages:
   - { name: "php-pdo", state: "{{ package_state_default }}" }
   - { name: "php-pecl-apcu", state: "{{ package_state_default }}" }
   - { name: "php-pecl-xdebug", state: "{{ package_state_default }}" }
+  - { name: "php-pecl-memcached", state: "{{ package_state_default }}" }
+  - { name: "php-pecl-imagick", state: "{{ package_state_default }}" }
   - { name: "php-process", state: "{{ package_state_default }}" }
   - { name: "php-soap", state: "{{ package_state_default }}" }
   - { name: "php-xml", state: "{{ package_state_default }}" }
