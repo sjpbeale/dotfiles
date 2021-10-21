@@ -1,4 +1,7 @@
 ---
+# Use Python3 on Fedora 30
+ansible_python_interpreter: /usr/bin/python3
+
 ansible_connection: local
 
 # Default state for the RPM packages
@@ -10,6 +13,7 @@ package_state_default: "present"
 # - http://docs.ansible.com/ansible/yum_module.html
 base_packages:
   # Base
+  - { name: "bat", state: "{{ package_state_default }}" }
   - { name: "bash-completion", state: "{{ package_state_default }}" }
   - { name: "bash", state: "{{ package_state_default }}" }
   - { name: "bind-utils", state: "{{ package_state_default }}" }
@@ -22,6 +26,7 @@ base_packages:
   - { name: "jq", state: "{{ package_state_default }}" }
   # Networking
   - { name: "mtr", state: "{{ package_state_default }}" }
+  - { name: "net-tools", state: "{{ package_state_default }}" }
   - { name: "tcpdump", state: "{{ package_state_default }}" }
   - { name: "telnet", state: "{{ package_state_default }}" }
   # Terminal emulation
@@ -34,6 +39,7 @@ base_packages:
   - { name: "wget", state: "{{ package_state_default }}" }
   # Git
   - { name: "git", state: "{{ package_state_default }}" }
+  - { name: "git-extras", state: "{{ package_state_default }}" }
   - { name: "tig", state: "{{ package_state_default }}" }
   # Vim
   - { name: "ack", state: "{{ package_state_default }}" }
@@ -59,6 +65,7 @@ desktop_packages:
   - { name: "hexchat", state: "{{ package_state_default }}" }
   - { name: "terminator", state: "{{ package_state_default }}" }
   - { name: "zeal", state: "{{ package_state_default }}" }
+  - { name: "pcmanfm", state: "{{ package_state_default }}" }
   # GNOME Desktop Manager (systemctl disable lightdm.service && systemctl enable gdm.service)
   - { name: "gdm", state: "{{ package_state_default }}" }
   # MATE Desktop Manager
@@ -77,7 +84,7 @@ desktop_packages:
   - { name: "pulseaudio-utils", state: "{{ package_state_default }}" }
   - { name: "xbacklight", state: "{{ package_state_default }}" }
   - { name: "arandr", state: "{{ package_state_default }}" }
-  - { name: "rdesktop", state: "{{ package_state_default }}" }
+  - { name: "compton", state: "{{ package_state_default }}" }
 
 # GUI related files to download on desktops
 # For parameters see:
@@ -117,4 +124,12 @@ devel_packages:
   - { name: "mariadb", state: "{{ package_state_default }}" }
   - { name: "mariadb-server", state: "{{ package_state_default }}" }
   - { name: "mycli", state: "{{ package_state_default }}" }
+  # AWS CLI
+  - { name: "aws", state: "{{ package_state_default }}" }
+  - { name: "awscli", state: "{{ package_state_default }}" }
+
+# geerlingguy.composer : Put in /usr/bin/
+composer_path: /usr/bin/composer
+# geerlingguy.composer : Keep updated to prevent outdated warnings
+composer_keep_updated: true
 

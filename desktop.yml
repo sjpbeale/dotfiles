@@ -13,6 +13,13 @@
       vars:
         rpms: "{{ desktop_packages }}"
 
+    - name: Install rofi from CORP repository
+      dnf:
+        name: rofi
+        enablerepo: yaroslav/i3desktop
+        state: present
+      become: yes
+
     - name: Setup desktop files in /home folder
       include_role:
         name: tools
@@ -29,7 +36,7 @@
         urls: "{{ desktop_downloads }}"
 
   roles:
-    - cmprescott.chrome
-    - jaredhocutt.slack
-    - sjpbeale.spotify
-    - sjpbeale.teamviewer
+    - { role: cmprescott.chrome, become: yes }
+    - { role: sjpbeale.spotify, become: yes }
+    - { role: sjpbeale.teamviewer, become: yes }
+    - { role: jaredhocutt.slack, become: yes }
