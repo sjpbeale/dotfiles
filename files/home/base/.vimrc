@@ -347,7 +347,7 @@ if filereadable(expand("~/.vim/bundle/ale/plugin/ale.vim"))
 		\   'javascript': ['eslint'],
 		\   'typescript': ['eslint'],
 		\}
-	let let g:ale_fix_on_save = 1
+	let g:ale_fix_on_save = 1
 	set omnifunc=ale#completion#OmniFunc
 endif
 
