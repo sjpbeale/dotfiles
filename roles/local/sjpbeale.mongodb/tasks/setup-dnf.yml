@@ -2,7 +2,7 @@
 
 - name: "Check version valid"
   uri:
-    url: https://repo.mongodb.org/yum/redhat/7/mongodb-org/{{ mongodb_version }}/x86_64/
+    url: https://repo.mongodb.org/yum/redhat/8/mongodb-org/{{ mongodb_version }}/x86_64/
     return_content: yes
   register: http_response
   failed_when: http_response.status != 200

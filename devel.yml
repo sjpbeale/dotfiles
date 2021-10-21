@@ -20,9 +20,8 @@
     - role: geerlingguy.composer
     - role: geerlingguy.redis
     - role: geerlingguy.memcached
-    - role: andrewrothstein.terraform
     - role: sjpbeale.mongodb
-      mongodb_version: 3.2
+    - role: andrewrothstein.terraform
 
 - name: Development user setup
   hosts: localhost
