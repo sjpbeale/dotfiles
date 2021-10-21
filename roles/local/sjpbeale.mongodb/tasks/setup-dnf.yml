@@ -9,7 +9,6 @@
   run_once: true
 
 - name: "Ensure repo present"
-  sudo: yes
   template:
     src: mongo.repo.j2
     dest: /etc/yum.repos.d/mongodb-org-{{ mongodb_version }}.repo
@@ -18,7 +17,6 @@
     mode: 0644
 
 - name: "Ensure installed"
-  sudo: yes
   dnf: name=mongodb-org
 
 - name: "Start service"
