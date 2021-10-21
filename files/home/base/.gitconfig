@@ -40,8 +40,10 @@
 	conflictstyle = diff3
 [mergetool]
 	prompt = false
+[diff]
+	noprefix = true
 [github]
 	user = sjpbeale
 [user]
 	name = Sam Beale
-	email = sam@easy-forex.com
+	email = sjpbeale@gmail.com

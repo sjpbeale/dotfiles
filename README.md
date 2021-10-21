@@ -10,7 +10,7 @@ Installation
 Clone the repository:
 
 ```
-$ git clone https://github.com/sam-ez4x/dotfiles.git
+$ git clone https://github.com/sjpbeale/dotfiles.git
 $ cd dotfiles
 ```
 
@@ -19,7 +19,8 @@ $ cd dotfiles
 Run Ansible
 
 ```
-$ ansible-playbook all.yml --ask-sudo-pass 
+$ ansible-galaxy install -r requirements.yml
+$ ansible-playbook all.yml -K
 ```
 
 You can skip package installations and/or network operations (Vim plugins cloning, etc)
@@ -65,12 +66,3 @@ Here is a brief overview of some of the features hidden deep in these dotfiles.
 ### Miscelanous
 
 *  MySQL prompt that includes current user, host, and selected database.
-
-Feedback
---------
-
-If you need to get in touch, send me an email to leonid@mamchenkov.net .  Alternatively, you can send in
-comments and pull requests for the project on GitHub at https://github.com/mamchenkov/dotfiles .
-
-Patches welcome! ;)
-

@@ -4,7 +4,9 @@
 "  Without me, my Vim is useless.
 "  Without Vim, I am useless.
 
+"
 " Vundle plugin manager requirements
+"
 set nocompatible
 filetype off
 " git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
@@ -13,22 +15,28 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
+"
 " Libraries and utils used by other plugins
+"
 Plugin 'tomtom/tlib_vim'
 Plugin 'mattn/webapi-vim'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'xolox/vim-misc'
 
+"
 " Beautifiers
+"
 Plugin 'flazz/vim-colorschemes'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'vim-scripts/CSApprox'
+"Plugin 'vim-scripts/CSApprox' " Convert GVim colorschemes for terminal Vim
 Plugin 'ryanoasis/vim-devicons'
 Plugin 'mhinz/vim-startify'
 
+"
 " General utilities
-Plugin 'yssl/QFEnter'
+"
+Plugin 'yssl/QFEnter' " Better way of opening items from the Quick Fix window
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'ervandew/supertab'
 Plugin 'kshenoy/vim-signature'
@@ -37,7 +45,9 @@ Plugin 'tyru/open-browser.vim'
 Plugin 'tpope/vim-speeddating'
 Plugin 'tpope/vim-eunuch'
 
+"
 " General programming
+"
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
 Plugin 'editorconfig/editorconfig-vim'
@@ -50,27 +60,40 @@ Plugin 'tyru/open-browser-unicode.vim' " requires tyru/open-browser.vim
 Plugin 'ludovicchabant/vim-gutentags'
 Plugin 'w0rp/ale'
 
+"
 " Git
+"
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
+Plugin 'gregsexton/gitv'
 Plugin 'mattn/gist-vim' " requieres: mattn/webapi-vim
 Plugin 'Xuyuanp/nerdtree-git-plugin' " requires: scrooloose/nerdtree
 
+"
 " HTML/XML
+"
 Plugin 'docunext/closetag.vim'
 
+"
 " JavaScript
+""
 Plugin 'vim-scripts/jQuery'
 
+"
 " PHP
+"
 Plugin 'vim-php/tagbar-phpctags.vim'
 Plugin 'shawncplus/phpcomplete.vim'
 
+"
 " WordPress
-" Plugin 'dsawardekar/wordpress.vim'
+"
+"Plugin 'dsawardekar/wordpress.vim'
 
+"
 " Databases
-" Plugin 'tpope/vim-dadbod'
+"
+"Plugin 'tpope/vim-dadbod'
 
 call vundle#end()
 " To ignore plugin indent changes use 'filetype plugin on' instead
@@ -91,12 +114,15 @@ set bg=dark					" use colors for the dark background
 syntax on					" switch on syntax highlighting
 syntax enable
 set t_Co=256				" Must be BEFORE the colorscheme
-" hi Normal           ctermfg=253             ctermbg=none cterm=none " Set transparent background
 " Use colorscheme if installed
-if filereadable(expand("~/.vim/bundle/vim-colorschemes/colors/lucius.vim"))
-	let g:lucius_no_term_bg=1   " Transparent background
-	colorscheme lucius
+if filereadable(expand("~/.vim/bundle/vim-colorschemes/colors/gruvbox.vim"))
+	colorscheme gruvbox
 endif
+" Other color schemes to try out
+"colorscheme jellybeans
+
+" Set transparent background (Thanks to https://stackoverflow.com/a/63382382/151647)
+autocmd vimenter * hi Normal guibg=NONE ctermbg=NONE
 
 "
 " Options : basic
@@ -151,6 +177,8 @@ set visualbell					" Don't beep me, you beep!
 set wildmenu					" show autocompetion in status menu
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 set wrapmargin=1				" margin from the right to show wrapping
+set undofile 					" enable undo
+set undodir=~/.vim/undodir 		" enable persistent undo
 
 "
 " Options : tabulation
@@ -319,7 +347,7 @@ if filereadable(expand("~/.vim/bundle/ale/plugin/ale.vim"))
 		\   'javascript': ['eslint'],
 		\   'typescript': ['eslint'],
 		\}
-	let let g:ale_fix_on_save = 1
+	let g:ale_fix_on_save = 1
 	set omnifunc=ale#completion#OmniFunc
 endif
 
@@ -358,7 +386,7 @@ if filereadable(expand("~/.vim/bundle/vim-gutentags/plugin/gutentags.vim"))
 	let g:gutentags_ctags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
 		\ '*.phar', '*.ini', '*.rst', '*.md',
 		\ '*bin/*', '*vendor/*/test*', '*vendor/*/Test*',
-		\ '*vendor/*/fixture*', '*vendor/*/Fixture*',
+		\ '*vendor/*/fixture*', '*vendor/*/Fixture*', '*node_modules/*',
 		\ '*tmp/*', '*var/cache*', '*var/log*']
 endif
 

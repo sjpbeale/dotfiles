@@ -13,21 +13,15 @@
       vars:
         rpms: "{{ devel_packages }}"
 
+    - name: Start MariaDB service
+      service: name=mariadb state=started enabled=true
+
   roles:
     - role: geerlingguy.composer
-      composer_path: /usr/bin/composer
-      composer_home_path: '~/.config/composer'
-      composer_keep_updated: true
     - role: geerlingguy.redis
     - role: geerlingguy.memcached
     - role: sjpbeale.mongodb
-      mongodb_version: 3.2
-    - role: sjpbeale.virtualbox
-
-  post_tasks:
-
-    - name: Start MariaDB service
-      service: name=mariadb state=started enabled=true
+    - role: andrewrothstein.terraform
 
 - name: Development user setup
   hosts: localhost
@@ -38,4 +32,3 @@
       nvm_node_version: 'lts'
       nvm_install_deps: false
       nvm_shell_init_file: '~/.bashrc'
-
