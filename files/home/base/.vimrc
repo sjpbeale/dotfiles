@@ -315,6 +315,12 @@ if filereadable(expand("~/.vim/bundle/ale/plugin/ale.vim"))
 		\}
 	let g:ale_lint_on_save = 1
 	let g:ale_lint_on_text_changed = 0
+	let g:ale_fixers = {
+		\   'javascript': ['eslint'],
+		\   'typescript': ['eslint'],
+		\}
+	let let g:ale_fix_on_save = 1
+	set omnifunc=ale#completion#OmniFunc
 endif
 
 " CtrlP
