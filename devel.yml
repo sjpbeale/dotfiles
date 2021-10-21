@@ -18,12 +18,11 @@
 
   roles:
     - role: geerlingguy.composer
-    - role: andrewrothstein.terraform
     - role: geerlingguy.redis
     - role: geerlingguy.memcached
+    - role: andrewrothstein.terraform
     - role: sjpbeale.mongodb
       mongodb_version: 3.2
-    - role: sjpbeale.virtualbox
 
 - name: Development user setup
   hosts: localhost
