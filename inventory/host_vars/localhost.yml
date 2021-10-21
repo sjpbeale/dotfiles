@@ -78,7 +78,6 @@ desktop_packages:
   - { name: "dmenu", state: "{{ package_state_default }}" }
   - { name: "feh", state: "{{ package_state_default }}" }
   - { name: "xcompmgr", state: "{{ package_state_default }}" }
-  - { name: "xorg-x11-xkb-utils", state: "{{ package_state_default }}" }
   - { name: "network-manager-applet", state: "{{ package_state_default }}" }
   - { name: "alsa-utils", state: "{{ package_state_default }}" }
   - { name: "pulseaudio-utils", state: "{{ package_state_default }}" }
