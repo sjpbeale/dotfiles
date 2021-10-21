@@ -38,4 +38,3 @@
   roles:
     - { role: cmprescott.chrome, become: yes }
     - { role: sjpbeale.spotify, become: yes }
-    - { role: sjpbeale.teamviewer, become: yes }
