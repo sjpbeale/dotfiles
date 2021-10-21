@@ -3,6 +3,8 @@
 # Ansible requirements
 # Install with: ansible-galaxy install -r requirements.yml
 #
-- src: geerlingguy.composer
 - src: cmprescott.chrome
+- src: geerlingguy.composer
+- src: geerlingguy.redis
+- src: geerlingguy.memcached
 - src: andrewrothstein.terraform
