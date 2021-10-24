@@ -9,3 +9,4 @@
 - src: geerlingguy.memcached
 - src: stephdewit.nvm
 - src: andrewrothstein.terraform
+- src: geerlingguy.docker

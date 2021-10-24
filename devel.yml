@@ -13,15 +13,18 @@
       vars:
         rpms: "{{ devel_packages }}"
 
-    - name: Start MariaDB service
-      service: name=mariadb state=started enabled=true
-
   roles:
     - role: geerlingguy.composer
     - role: geerlingguy.redis
     - role: geerlingguy.memcached
     - role: sjpbeale.mongodb
     - role: andrewrothstein.terraform
+    - role: geerlingguy.docker
+
+  post_tasks:
+
+    - name: Start MariaDB service
+      service: name=mariadb state=started enabled=true
 
 - name: Development user setup
   hosts: localhost
@@ -32,3 +35,12 @@
       nvm_node_version: 'lts'
       nvm_install_deps: false
       nvm_shell_init_file: '~/.bashrc'
+
+  post_tasks:
+
+    - name: Add User {{ ansible_user_id }} to Docker
+      become: yes
+      user:
+        name: "{{ ansible_user_id }}"
+        groups: docker
+        append: yes
