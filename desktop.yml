@@ -37,4 +37,5 @@
 
   roles:
     - { role: cmprescott.chrome, become: yes }
+    - { role: jaredhocutt.slack, become: yes }
     - { role: sjpbeale.spotify, become: yes }
