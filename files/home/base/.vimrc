@@ -51,6 +51,7 @@ Plugin 'tpope/vim-eunuch'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
 Plugin 'editorconfig/editorconfig-vim'
+Plugin 'vim-scripts/PreserveNoEOL'
 Plugin 'majutsushi/tagbar'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'tmhedberg/matchit'
@@ -78,6 +79,12 @@ Plugin 'docunext/closetag.vim'
 " JavaScript
 ""
 Plugin 'vim-scripts/jQuery'
+
+"
+" Solidity
+"
+Plugin 'tomlion/vim-solidity'
+Plugin 'miguelmota/cairo.vim'
 
 "
 " PHP
@@ -273,6 +280,9 @@ endif
 " See what's changed with <Leader>?
 map <Leader>? :DiffOrig<CR>
 
+" Follow directory of current file
+autocmd BufEnter * silent! lcd %:p:h
+
 "
 " File Types
 "
@@ -340,14 +350,26 @@ if filereadable(expand("~/.vim/bundle/ale/plugin/ale.vim"))
 	let g:ale_linters = {
 		\   'php': ['php'],
 		\   'javascript': ['eslint'],
+		\   'typescript': ['eslint', 'tsserver'],
 		\}
 	let g:ale_lint_on_save = 1
 	let g:ale_lint_on_text_changed = 0
 	let g:ale_fixers = {
-		\   'javascript': ['eslint'],
-		\   'typescript': ['eslint'],
+		"\   'nix': ['nixpkgs-fmt'],
+		\   'nix': ['nixfmt'],
+		\   'javascript': ['eslint', 'dprint'],
+		\   'typescript': ['eslint', 'dprint'],
 		\}
 	let g:ale_fix_on_save = 1
+	let g:ale_hover_cursor = 1
+	let g:ale_floating_preview = 1
+	let g:ale_set_balloons = 1
+	let g:ale_javascript_eslint_executable = 'yarn'
+	let g:ale_javascript_eslint_options = 'run eslint'
+	let g:ale_javascript_eslint_use_global = 1
+	let g:ale_javascript_prettier_executable = 'yarn'
+	let g:ale_javascript_prettier_options = 'run prettier'
+	let g:ale_javascript_prettier_use_global = 1
 	set omnifunc=ale#completion#OmniFunc
 endif
 
@@ -366,6 +388,21 @@ endif
 if filereadable(expand("~/.vim/bundle/editorconfig-vim/plugin/editorconfig.vim"))
 	" EditorConfig exclude patterns
 	let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
+
+	" PreserveNoEOL - allow editorconfig insert final newline to work
+	if filereadable(expand("~/.vim/bundle/PreserveNoEOL/plugin/PreserveNoEOL.vim"))
+		function! EditorConfigEOLHook(config)
+			if has_key(a:config, 'insert_final_newline')
+				if a:config['insert_final_newline'] == "false"
+					silent! SetNoEOL
+				endif
+			endif
+
+			return 0   " Return 0 to show no error happened
+		endfunction
+
+		call editorconfig#AddNewHook(function('EditorConfigEOLHook'))
+	endif
 endif
 
 " GitGutter
@@ -471,4 +508,9 @@ if filereadable(expand("~/.vim/bundle/zeavim.vim/plugin/zeavim.vim"))
 	" Zeal offline documentation
 	let g:zv_file_types = {'php':'cakephp,php'}
 	autocmd FileType php setlocal keywordprg=zeal
+endif
+
+" Cairo
+if filereadable(expand("~/.vim/bundle/cairo.vim/plugin/cairo.vim"))
+	let g:cairo_linter_autosave = 1
 endif

@@ -304,7 +304,7 @@ function fancyprompt {
 			GIT_DIRTY="$IRed$GIT_DIRTY"
 		fi
 		# Bright yellow for master branch, purple for everything else
-		if [ "$GIT_BRANCH" == "master" ]
+		if [ "$GIT_BRANCH" == "master" ] || [ "$GIT_BRANCH" == "main" ]
 			then
 				GIT_BRANCH_COLOR=$IYellow
 			else
@@ -349,6 +349,27 @@ case "$TERM" in
 			PROMPT_COMMAND="dullprompt && history -a"
 		;;
 esac
+
+# NVM path management from ansible BEGIN
+# . ~/.nvm/nvm.sh
+# NVM path management from ansible END
+
+export GIT_SSH=/usr/bin/ssh
+. ~/.nix-profile/etc/profile.d/nix.sh
+
+eval "$(direnv hook bash)"
+
+export PATH="/home/sjpbeale/.yarn/bin:$PATH"
+
+# PATH="/home/sjpbeale/perl5/bin${PATH:+:${PATH}}"; export PATH;
+# PERL5LIB="/home/sjpbeale/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+# PERL_LOCAL_LIB_ROOT="/home/sjpbeale/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+# PERL_MB_OPT="--install_base \"/home/sjpbeale/perl5\""; export PERL_MB_OPT;
+# PERL_MM_OPT="INSTALL_BASE=/home/sjpbeale/perl5"; export PERL_MM_OPT;
+source <(kubectl completion bash)
+
+source /home/sjpbeale/.bash_completions/dvf-config.sh
+source /home/sjpbeale/.nix-profile/share/bash-completion/completions/nix
 
 # 
 # Last bits
