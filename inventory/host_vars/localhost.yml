@@ -24,6 +24,7 @@ base_packages:
   - { name: "sysstat", state: "{{ package_state_default }}" }
   - { name: "ncdu", state: "{{ package_state_default }}" }
   - { name: "jq", state: "{{ package_state_default }}" }
+  - { name: "parallel", state: "{{ package_state_default }}" }
   # Networking
   - { name: "mtr", state: "{{ package_state_default }}" }
   - { name: "net-tools", state: "{{ package_state_default }}" }

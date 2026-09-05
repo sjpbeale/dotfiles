@@ -47,3 +47,5 @@
 [user]
 	name = Sam Beale
 	email = sjpbeale@gmail.com
+[pull]
+	ff = only
