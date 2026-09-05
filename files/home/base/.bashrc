@@ -4,100 +4,73 @@
 # Guide and the rest of the Web.  Thanks to all who helped along the
 # way.
 
+# ------------------------------------------------------------------
+# 0. Source global definitions
+# ------------------------------------------------------------------
+[ -f /etc/bashrc ] && source /etc/bashrc
 
-# Source global definitions
-if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
-fi
-
-# If not running interactively, don't do anything
+# ------------------------------------------------------------------
+# 1. Exit if not running interactively
+# ------------------------------------------------------------------
 [ -z "$PS1" ] && return
 
-#
-# Switch terminal to support 256 colors, if possible
-# 
+# ------------------------------------------------------------------
+# 2. Terminal Settings
+# ------------------------------------------------------------------
 case $TERM in
-	xterm*)
-		# Check if the terminal supports 256 colors
-		if [ -e /usr/share/terminfo/x/xterm-256color ]; then
-			export TERM='xterm-256color'
-		else
-			export TERM='xterm-color'
-		fi
-		;;
-	*)
-		export TERM='linux'
+	xterm)
+		# If we know xterm-256color exists, we can upgrade plain xterm safely.
+		[ -e /usr/share/terminfo/x/xterm-256color ] && export TERM='xterm-256color'
 		;;
 esac
-
-#
-# Various useful functions
-# 
+# ------------------------------------------------------------------
+# 3. Functions
+# ------------------------------------------------------------------
 
 # Check if command exists
-# 
 # Usage: have fortune && fortune
-function have() { 
-	type "$1" &> /dev/null; 
-}
+have() { type "$1" &> /dev/null; }
 
 # Show top 10 commands in history
-function top10() {
-	history | awk '{a[$4]++ } END{for(i in a){print a[i] " " i}}'|sort -rn |head -n 10
+top10() { 
+	history | awk '{a[$4]++ } END{for(i in a){print a[i] " " i}}' | sort -rn | head -n 10 
 }
 
-# 
-# Export some useful variables
-# 
-export PATH=./bin/:./vendor/bin:$HOME/bin:$HOME/dotfiles/bin:$PATH
+
+# ------------------------------------------------------------------
+# 4. Environment variables and shell behavior
+# ------------------------------------------------------------------
+export PATH=$HOME/bin:$HOME/dotfiles/bin:$PATH
+export PATH="$PATH:$HOME/.local/bin"
+# Android Emulator
+# export ANDROID_HOME=$HOME/.var/app/com.google.AndroidStudio/data/Android/Sdk
+# export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin
+
 export PAGER="$(which --skip-alias less) -RFSinX"
-export EDITOR="$(which --skip-alias vim) -X"
+export EDITOR="$(which --skip-alias vim)"
+export VISUAL="$(which --skip-alias vim)"
+export SYSTEMD_EDITOR="$(which --skip-alias vim)"
 export LC_TIME=en_US
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 export HISTTIMEFORMAT="%F %T " # Always inclulde space before final quote
 export HISTCONTROL=ignoredups:ignorespace
+export HISTIGNORE="&:[ ]*:exit:ls:ll:bg:fg:h:history:clear" # Do not save these commands to history
+# Unlimited buffer and file size for history
+export HISTSIZE=
+export HISTFILESIZE=
+export HSTR_CONFIG=hicolor
+export PROMPT_DIRTRIM=2 # Automatically trim long paths in prompt (requires Bash 4.x)
 export MOZ_NO_REMOTE=1
+export LS_COLORS="$LS_COLORS:di=01;94" # Use bright blue for directories (better for dark background terminals)
 
-# Shorten and simplify cd
-export CDPATH=.:~:~/Work:~/Development:/var/www/html:/var/www/vhosts
-# Do not save these commands to history
-export HISTIGNORE="&:[ ]*:exit:ls:ll:bg:fg:h:history:clear"
+# Shorten and simplify cd (only in interactive shell)
+if test "${PS1+set}"
+then
+	export CDPATH=.:~:~/Work:~/Development:/var/www/html:/var/www/vhosts
+fi
 # Ignore files matching this suffixes from completion
 export FIGNORE="$FIGNORE:.svn"
-# Automatically trim long paths in prompt (requries Bash 4.x)
-export PROMPT_DIRTRIM=2
-
-# When displaying prompt, write previous command to history file so that,
-# any new shell immediately gets the history lines from all previous shells.
-PROMPT_COMMAND='history -a'
-
-# 
-# Aliases
-# 
-alias v="$EDITOR"
-alias vi="$EDITOR"
-alias vim="$EDITOR"
-alias vd="$EDITOR -d"
-alias ll="ls -al --group-directories-first"
-alias cat="bat"
-alias df="df -kTh"
-alias du="du -kh"
-alias ..="cd ..;"
-alias ...="cd ..;"
-alias h="history"
-alias traceroute="traceroute -I"
-alias who="who -HT"
-alias mkdir="mkdir -p"
-alias path="echo -e ${PATH//:/\\\\n}"
-
-alias head='head -n $((${LINES:-12}-2))' #as many as possible without scrolling
-alias tail='tail -n $((${LINES:-12}-2)) -s.1' #Likewise, also more responsive -f
-
-# what most people want from od (hexdump)
-alias hd='od -Ax -tx1z -v'
-
-# Leaving
-alias quit="exit"
-alias bye="exit"
 
 # 
 # Less pager colors for man pages
@@ -140,9 +113,41 @@ shopt -s histappend histreedit histverify # better history management
 shopt -u mailwarn
 unset MAILCHECK
 
-#
-# Build shell prompt
-# 
+
+# ------------------------------------------------------------------
+# 5. Aliases
+# ------------------------------------------------------------------
+alias v="$EDITOR"
+alias vi="$EDITOR"
+alias vim="$EDITOR"
+alias vd="$EDITOR -d"
+alias ll="ls -al --group-directories-first"
+alias less="less -R"
+alias cat="bat -pp"
+alias df="df -kTh"
+alias du="du -kh"
+alias ..="cd ..;"
+alias ...="cd ..;"
+alias h="hstr"
+alias traceroute="traceroute -I"
+alias who="who -HT"
+alias mkdir="mkdir -p"
+alias path='echo -e "${PATH//:/\\n}"'
+
+alias head='head -n $((${LINES:-12}-2))' #as many as possible without scrolling
+alias tail='tail -n $((${LINES:-12}-2)) -s.1' #Likewise, also more responsive -f
+
+# what most people want from od (hexdump)
+alias hd='od -Ax -tx1z -v'
+
+# Leaving
+alias quit="exit"
+alias bye="exit"
+
+# ------------------------------------------------------------------
+# 6. Git-aware prompt
+# ------------------------------------------------------------------
+
 # Most of the code is from: https://gist.github.com/293517
 
 # Bash colors from https://wiki.archlinux.org/index.php/Color_Bash_Prompt
@@ -213,7 +218,8 @@ BIWhite="\[\e[1;97m\]"      # White
 # High Intensity backgrounds
 On_IBlack="\[\e[0;100m\]"   # Black
 On_IRed="\[\e[0;101m\]"     # Red
-On_IGreen="\[\e[0;102m\]"   # Green On_IYellow='\e[0;103m'  # Yellow
+On_IGreen="\[\e[0;102m\]"   # Green
+On_IYellow="\[\e[0;103m\]"  # Yellow
 On_IBlue="\[\e[0;104m\]"    # Blue
 On_IPurple="\[\e[0;105m\]"  # Purple
 On_ICyan="\[\e[0;106m\]"    # Cyan
@@ -239,11 +245,13 @@ function __git_branch {
 }
 
 function terminal_title {
-	echo "\\[\\033]0;\\u@\\H:\\w\\007\\]"
+    # Non-printing title escape; keep \u/\H/\w for PS1 expansion
+    printf '\\[\\e]0;\\u@\\H:\\w\\a\\]'
 }
 
 function fancyprompt {
-	local RETVAL=$?
+	#local RETVAL=$?
+	local RETVAL="${1:-$?}"
 
 	# Show $ for regular user and # for root
 	LAST_SYMBOL="\\$"
@@ -251,8 +259,10 @@ function fancyprompt {
 	if [ "$RETVAL" -eq "0" ]
 	then
 		LAST_COLOR=$Green
+		LAST_SYMBOL="➜"
 	else
 		LAST_COLOR=$Red
+		LAST_SYMBOL="✗"
 	fi
 
 	# Root is bright red, everyone else is green
@@ -262,19 +272,20 @@ function fancyprompt {
 		PROMPT_COLOR=$IRed
 		FEEL_COLOR=$IBlack
 	else
-		USER_COLOR=$White
+		# USER_COLOR=$White - maybe switch back to white
+		USER_COLOR=$ICyan
 		PROMPT_COLOR=$IWhite
 		FEEL_COLOR=$IBlack
 	fi
 
-	# Load average green, or bright yellow, or bright red
+	# Load average -green- gray, or bright yellow, or bright red
 	CPUS=$(grep -c vendor_id /proc/cpuinfo)
 	CPUS=$(printf "%.0f" $CPUS)
 	read ONE REST < /proc/loadavg
 	LOAD=$(printf "%.0f" $ONE)
 	if [ "$LOAD" -lt "$CPUS" ]
 	then 
-		LOAD_COLOR=$Cyan
+		LOAD_COLOR=$IBlack
 	elif [ "$LOAD" -eq "$CPUS" ]
 	then 
 		LOAD_COLOR=$IYellow
@@ -282,12 +293,12 @@ function fancyprompt {
 		LOAD_COLOR=$IRed
 	fi
 
-	# localhost|localdomain hostnames are green, as well as anything with .ppl. (people)
-	if [[ $HOSTNAME =~ "localhost" || $HOSTNAME =~ "localdomain" || $HOSTNAME =~ ".ppl." ]]
+	# localhost|localdomain hostnames are green
+	if [[ $HOSTNAME =~ "localhost" || $HOSTNAME =~ "localdomain" ]]
 	then
-		HOST_COLOR=$Cyan
-	# .com|.org|.net hostnames are bright red
-	elif [[ $HOSTNAME =~ ".com" || $HOSTNAME =~ ".org" || $HOSTNAME =~ ".net" ]]
+		HOST_COLOR=$Green
+	# .com|.org|.net|.tech hostnames are bright red
+	elif [[ $HOSTNAME =~ ".com" || $HOSTNAME =~ ".org" || $HOSTNAME =~ ".net" || $HOSTNAME =~ ".tech" ]]
 	then
 		HOST_COLOR=$IRed
 	# everything else yellow
@@ -303,13 +314,20 @@ function fancyprompt {
 		then
 			GIT_DIRTY="$IRed$GIT_DIRTY"
 		fi
-		# Bright yellow for master branch, purple for everything else
-		if [ "$GIT_BRANCH" == "master" ] || [ "$GIT_BRANCH" == "main" ]
-			then
-				GIT_BRANCH_COLOR=$IYellow
-			else
-				GIT_BRANCH_COLOR=$ICyan
-		fi
+
+		# Bright red for default, master, main branches, purple for everything else
+		DEFAULT_BRANCH=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD | sed -e 's#^origin/##' || true)
+
+		case "$GIT_BRANCH" in
+			"$DEFAULT_BRANCH"|master|main|develop|production) GIT_BRANCH_COLOR=$IRed ;;
+			release/*|hotfix/*) GIT_BRANCH_COLOR=$IRed ;;
+			fix/*|bugfix/*) GIT_BRANCH_COLOR=$IYellow ;;
+			feature/*|feat/*) GIT_BRANCH_COLOR=$IGreen ;;
+			chore/*|refactor/*|docs/*|test/*|ci/*) GIT_BRANCH_COLOR=$IBlue ;;
+			spike/*|experiment/*|wip/*) GIT_BRANCH_COLOR=$IBlack ;;
+			*) GIT_BRANCH_COLOR=$Purple ;;
+		esac
+
 		GIT_BRANCH="$FEEL_COLOR (${GIT_BRANCH_COLOR}$GIT_BRANCH$GIT_DIRTY$FEEL_COLOR)"
 	fi
 
@@ -342,38 +360,22 @@ function dullprompt {
 case "$TERM" in
 	xterm-color|xterm-256color|rxvt*|screen*)
 			# Update history on each command
-			PROMPT_COMMAND="fancyprompt && history -a"
+			PROMPT_COMMAND='__ps=$?; fancyprompt "$__ps"; history -a'
 		;;
 	*)
 			# Update history on each command
-			PROMPT_COMMAND="dullprompt && history -a"
+			PROMPT_COMMAND='__ps=$?; dullprompt; history -a'
 		;;
 esac
 
-# NVM path management from ansible BEGIN
-# . ~/.nvm/nvm.sh
-# NVM path management from ansible END
+# ------------------------------------------------------------------------------
+# 7. Local Customization Hook
+# ------------------------------------------------------------------------------
+[ -f ~/.bashrc_custom ] && source ~/.bashrc_custom || true
 
-export GIT_SSH=/usr/bin/ssh
-. ~/.nix-profile/etc/profile.d/nix.sh
-
-eval "$(direnv hook bash)"
-
-export PATH="/home/sjpbeale/.yarn/bin:$PATH"
-
-# PATH="/home/sjpbeale/perl5/bin${PATH:+:${PATH}}"; export PATH;
-# PERL5LIB="/home/sjpbeale/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-# PERL_LOCAL_LIB_ROOT="/home/sjpbeale/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-# PERL_MB_OPT="--install_base \"/home/sjpbeale/perl5\""; export PERL_MB_OPT;
-# PERL_MM_OPT="INSTALL_BASE=/home/sjpbeale/perl5"; export PERL_MM_OPT;
-source <(kubectl completion bash)
-
-source /home/sjpbeale/.bash_completions/dvf-config.sh
-source /home/sjpbeale/.nix-profile/share/bash-completion/completions/nix
-
-# 
-# Last bits
-# 
+# ------------------------------------------------------------------------------
+# 8. Last bits
+# ------------------------------------------------------------------------------
 
 # Show host information
 #have whereami && whereami
@@ -381,3 +383,23 @@ source /home/sjpbeale/.nix-profile/share/bash-completion/completions/nix
 # Show thought of the day
 #have fortune && echo Thought of the day: && fortune -s && echo
 
+
+# ------------
+# Check below if it should be added to .bashrc_custom 
+#
+# export GIT_SSH=/usr/bin/ssh
+# . ~/.nix-profile/etc/profile.d/nix.sh
+
+# eval "$(direnv hook bash)"
+
+# export PATH="/home/sjpbeale/.yarn/bin:$PATH"
+
+# PATH="/home/sjpbeale/perl5/bin${PATH:+:${PATH}}"; export PATH;
+# PERL5LIB="/home/sjpbeale/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+# PERL_LOCAL_LIB_ROOT="/home/sjpbeale/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+# PERL_MB_OPT="--install_base \"/home/sjpbeale/perl5\""; export PERL_MB_OPT;
+# PERL_MM_OPT="INSTALL_BASE=/home/sjpbeale/perl5"; export PERL_MM_OPT;
+# source <(kubectl completion bash)
+
+# source /home/sjpbeale/.bash_completions/dvf-config.sh
+# source /home/sjpbeale/.nix-profile/share/bash-completion/completions/nix

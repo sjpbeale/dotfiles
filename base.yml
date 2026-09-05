@@ -2,7 +2,7 @@
 # like bash, vim, and git
 ---
 - name: Base setup
-  hosts: localhost
+  hosts: all
   pre_tasks:
 
     - name: Install base packages
@@ -18,15 +18,97 @@
         tasks_from: file
       vars:
         files_src: "home/base/"
-        files_dst: "{{ ansible_env.HOME }}"
+        files_dst: "{{ ansible_user_dir }}"
+      register: base_home_files
 
-    - name: Get Vim plugins
-      include_role:
-        name: tools
-        tasks_from: git
-      vars:
-        git_repos: "{{ vim_plugins }}"
+    - name: Remove legacy Vundle directory
+      file:
+        path: "{{ ansible_user_dir }}/.vim/bundle"
+        state: absent
 
-    - name: Install Vim plugins
-      shell: vim +PluginInstall +qall
+    - name: Remove legacy Vundle install log
+      file:
+        path: "{{ ansible_user_dir }}/.vim/vundle_install.log"
+        state: absent
 
+    - name: Remove legacy Pathogen loader
+      file:
+        path: "{{ ansible_user_dir }}/.vim/autoload/pathogen.vim"
+        state: absent
+
+    - name: Remove legacy vim-plug install marker
+      file:
+        path: "{{ ansible_user_dir }}/.vim/.plug_installed"
+        state: absent
+
+    - name: Ensure vim-plug autoload directory exists
+      file:
+        path: "{{ ansible_user_dir }}/.vim/autoload"
+        state: directory
+        mode: "0755"
+
+    - name: Install vim-plug (plug.vim)
+      get_url:
+        url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+        dest: "{{ ansible_user_dir }}/.vim/autoload/plug.vim"
+        mode: "0644"
+
+    - name: Calculate the managed vimrc checksum
+      set_fact:
+        managed_vimrc_checksum: >-
+          {{ lookup('file', playbook_dir ~ '/files/home/base/.vimrc')
+          | hash('sha256') }}
+
+    - name: Check vim-plug configuration checksum marker
+      stat:
+        path: "{{ ansible_user_dir }}/.vim/.plug_config_checksum"
+      register: plug_checksum_marker
+
+    - name: Read vim-plug configuration checksum marker
+      slurp:
+        src: "{{ ansible_user_dir }}/.vim/.plug_config_checksum"
+      register: installed_vimrc_checksum
+      when: plug_checksum_marker.stat.exists
+
+    - name: Decide whether Vim plugins need synchronization
+      set_fact:
+        vim_plugins_need_sync: >-
+          {{ not plug_checksum_marker.stat.exists
+          or ((installed_vimrc_checksum.content | default('') | b64decode | trim)
+          != managed_vimrc_checksum) }}
+
+    - name: Synchronize Vim plugins when configuration changes
+      shell: >
+        vim -E -s
+        -u "{{ ansible_user_dir }}/.vimrc"
+        -i NONE
+        +"silent! PlugInstall --sync"
+        +qall
+      args:
+        executable: /bin/bash
+      when: vim_plugins_need_sync
+      register: plug_install
+      changed_when: true
+      failed_when: plug_install.rc != 0
+
+    - name: Verify vim-plug installed a key plugin dir
+      stat:
+        path: "{{ ansible_user_dir }}/.vim/plugged/vim-airline"
+      register: airline_dir
+      when: vim_plugins_need_sync
+
+    - name: Fail if plugin install did not create expected dirs
+      fail:
+        msg: "vim-plug ran but {{ ansible_user_dir }}/.vim/plugged/vim-airline was not created."
+      when:
+        - vim_plugins_need_sync
+        - not airline_dir.stat.exists
+
+    - name: Write vim-plug configuration checksum marker
+      copy:
+        dest: "{{ ansible_user_dir }}/.vim/.plug_config_checksum"
+        content: "{{ managed_vimrc_checksum }}\n"
+        mode: "0644"
+      when:
+        - vim_plugins_need_sync
+        - airline_dir.stat.exists

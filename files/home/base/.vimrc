@@ -5,124 +5,111 @@
 "  Without Vim, I am useless.
 
 "
-" Vundle plugin manager requirements
+" Fix VIM artifacts (OSC palette queries)
+"
+
+" 1) Prevent the runtime plugin from doing anything (even if sourced)
+let g:loaded_colorresp = 1
+
+" 2) Nuke the termcap requests so nothing gets sent even if some script tries
+if exists('+t_RB') | set t_RB= | endif   " background color request
+if exists('+t_RF') | set t_RF= | endif   " foreground color request
+" (Optional, if present)
+if exists('+t_RS') | set t_RS= | endif   " cursor shape request
+if exists('+t_RC') | set t_RC= | endif   " cursor blink request
+if exists('+t_RV') | set t_RV= | endif   " version request
+
+" Clear terminal after exit just in case
+augroup CleanExit
+  autocmd!
+  autocmd VimLeave * silent! execute "!tput rmcup || clear"
+augroup END
+
+"
+" vim-plug plugin manager requirements
 "
 set nocompatible
 filetype off
-" git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-set rtp+=~/.vim/bundle/Vundle.vim
-" Run :PluginInstall to install everything
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-
-"
-" Libraries and utils used by other plugins
-"
-Plugin 'tomtom/tlib_vim'
-Plugin 'mattn/webapi-vim'
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'xolox/vim-misc'
+call plug#begin('~/.vim/plugged')
 
 "
 " Beautifiers
 "
-Plugin 'flazz/vim-colorschemes'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-"Plugin 'vim-scripts/CSApprox' " Convert GVim colorschemes for terminal Vim
-Plugin 'ryanoasis/vim-devicons'
-Plugin 'mhinz/vim-startify'
+Plug 'flazz/vim-colorschemes'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'ryanoasis/vim-devicons'
+Plug 'mhinz/vim-startify'
+Plug 'powerman/vim-plugin-AnsiEsc'
 
 "
 " General utilities
 "
-Plugin 'yssl/QFEnter' " Better way of opening items from the Quick Fix window
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'ervandew/supertab'
-Plugin 'kshenoy/vim-signature'
-Plugin 'mhinz/vim-grepper'
-Plugin 'tyru/open-browser.vim'
-Plugin 'tpope/vim-speeddating'
-Plugin 'tpope/vim-eunuch'
+Plug 'kshenoy/vim-signature'
+Plug 'mhinz/vim-grepper'
+Plug 'tpope/vim-speeddating'
 
 "
 " General programming
 "
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
-Plugin 'editorconfig/editorconfig-vim'
-Plugin 'vim-scripts/PreserveNoEOL'
-Plugin 'majutsushi/tagbar'
-Plugin 'sheerun/vim-polyglot'
-Plugin 'tmhedberg/matchit'
-Plugin 'KabbAmine/zeavim.vim'
-Plugin 'tyru/open-browser-github.vim' " requires tyru/open-browser.vim
-Plugin 'tyru/open-browser-unicode.vim' " requires tyru/open-browser.vim
-Plugin 'ludovicchabant/vim-gutentags'
-Plugin 'w0rp/ale'
+Plug 'preservim/nerdcommenter'
+Plug 'preservim/nerdtree'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'tmhedberg/matchit'
+Plug 'dense-analysis/ale'
 
 "
 " Git
 "
-Plugin 'airblade/vim-gitgutter'
-Plugin 'tpope/vim-fugitive'
-Plugin 'gregsexton/gitv'
-Plugin 'mattn/gist-vim' " requieres: mattn/webapi-vim
-Plugin 'Xuyuanp/nerdtree-git-plugin' " requires: scrooloose/nerdtree
+Plug 'airblade/vim-gitgutter'
+Plug 'Xuyuanp/nerdtree-git-plugin' " requires: scrooloose/nerdtree
 
 "
 " HTML/XML
 "
-Plugin 'docunext/closetag.vim'
+Plug 'docunext/closetag.vim'
 
 "
-" JavaScript
-""
-Plugin 'vim-scripts/jQuery'
+" Markdown
+"
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 
 "
 " Solidity
+" - Old, check with plug
 "
-Plugin 'tomlion/vim-solidity'
-Plugin 'miguelmota/cairo.vim'
+" Plugin 'tomlion/vim-solidity'
+" Plugin 'miguelmota/cairo.vim'
 
-"
-" PHP
-"
-Plugin 'vim-php/tagbar-phpctags.vim'
-Plugin 'shawncplus/phpcomplete.vim'
+call plug#end()
 
-"
-" WordPress
-"
-"Plugin 'dsawardekar/wordpress.vim'
-
-"
-" Databases
-"
-"Plugin 'tpope/vim-dadbod'
-
-call vundle#end()
 " To ignore plugin indent changes use 'filetype plugin on' instead
 filetype plugin indent on
 
 " Change mapleader to ,
 let mapleader = ","
+
 " Search down into subfolders
 set path+=**
 
 " Update gitgutter, matchit, polyglot, etc every 500ms instead of default 4s
 set updatetime=500
 
+" Arrow key fix (https://github.com/spf13/spf13-vim/issues/780)
+if &term[:4] == "xterm" || &term[:5] == 'screen' || &term[:3] == 'rxvt'
+	inoremap <silent> <C-[>OC <RIGHT>
+endif
+
 "
 " Vim UI
 "
 set bg=dark					" use colors for the dark background
 syntax on					" switch on syntax highlighting
-syntax enable
 set t_Co=256				" Must be BEFORE the colorscheme
 " Use colorscheme if installed
-if filereadable(expand("~/.vim/bundle/vim-colorschemes/colors/gruvbox.vim"))
+if filereadable(expand("~/.vim/plugged/vim-colorschemes/colors/gruvbox.vim"))
+	let g:gruvbox_termcolors = 256
 	colorscheme gruvbox
 endif
 " Other color schemes to try out
@@ -207,6 +194,10 @@ set nohlsearch				" do not highlight search patterns
 set smartcase				" case-insensitive searching until pattern is in lower case
 set wrapscan				" wrap search around the end of file
 
+"
+" Fix GUI artifacts
+"
+set notermguicolors
 
 "
 " Shortcuts
@@ -248,13 +239,13 @@ map <F4> :q<CR>
 function! ToggleLeftColumn()
 	if &number == 1
 		set nonumber
-		if filereadable(expand("~/.vim/bundle/vim-gitgutter/plugin/gitgutter.vim"))
+		if exists(':GitGutterDisable')
 			GitGutterDisable
 		endif
 		echo "Left column is off"
 	else
 		set number
-		if filereadable(expand("~/.vim/bundle/vim-gitgutter/plugin/gitgutter.vim"))
+		if exists(':GitGutterEnable')
 			GitGutterEnable
 		endif
 		echo "Left column is on"
@@ -304,11 +295,11 @@ autocmd FileType php setlocal keywordprg=phpdoc
 "
 
 " Airline
-if filereadable(expand("~/.vim/bundle/vim-airline/plugin/airline.vim"))
+if exists(':AirlineToggle')
+	let g:airline#extensions#term#enabled = 0
 	let g:airline#extensions#tabline#enabled = 1
 	let g:airline#extensions#ale#enabled = 1
 	let g:airline#extensions#branch#enabled = 1
-	let g:airline#extensions#tagbar#enabled = 1
 	let g:airline_skip_empty_sections = 1
 	let g:airline_theme='powerlineish'
 	"let g:airline_left_sep=''
@@ -346,7 +337,7 @@ if filereadable(expand("~/.vim/bundle/vim-airline/plugin/airline.vim"))
 endif
 
 " ALE
-if filereadable(expand("~/.vim/bundle/ale/plugin/ale.vim"))
+if exists(':ALEEnable')
 	let g:ale_linters = {
 		\   'php': ['php'],
 		\   'javascript': ['eslint'],
@@ -373,62 +364,25 @@ if filereadable(expand("~/.vim/bundle/ale/plugin/ale.vim"))
 	set omnifunc=ale#completion#OmniFunc
 endif
 
-" CtrlP
-if filereadable(expand("~/.vim/bundle/ctrlp.vim/plugin/ctrlp.vim"))
-	" Ignore files from .gitignore
-	" let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
-	let g:ctrlp_use_caching = 1
-	let g:ctrlp_clear_cache_on_exit = 0
-	let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript',
-		\ 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
-	map <silent> <leader>d :CtrlPTag<cr><C-\>w
-endif
-
 " EditorConfig
-if filereadable(expand("~/.vim/bundle/editorconfig-vim/plugin/editorconfig.vim"))
+if filereadable(expand("~/.vim/plugged/editorconfig-vim/plugin/editorconfig.vim"))
 	" EditorConfig exclude patterns
 	let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
-
-	" PreserveNoEOL - allow editorconfig insert final newline to work
-	if filereadable(expand("~/.vim/bundle/PreserveNoEOL/plugin/PreserveNoEOL.vim"))
-		function! EditorConfigEOLHook(config)
-			if has_key(a:config, 'insert_final_newline')
-				if a:config['insert_final_newline'] == "false"
-					silent! SetNoEOL
-				endif
-			endif
-
-			return 0   " Return 0 to show no error happened
-		endfunction
-
-		call editorconfig#AddNewHook(function('EditorConfigEOLHook'))
-	endif
 endif
 
 " GitGutter
-if filereadable(expand("~/.vim/bundle/vim-gitgutter/plugin/gitgutter.vim"))
+if exists(':GitGutterEnable')
 	" Don't show gitgutter signs in files with more than 500 changes
 	let g:gitgutter_max_signs = 500
 endif
 
 " Grepper
-if filereadable(expand("~/.vim/bundle/vim-grepper/plugin/grepper.vim"))
+if exists(':Grepper')
 	nnoremap <leader>g :Grepper -cword -noprompt<cr>
 endif
 
-" Gutentags
-if filereadable(expand("~/.vim/bundle/vim-gutentags/plugin/gutentags.vim"))
-	" Where to store tag files
-	let g:gutentags_cache_dir = '~/.vim/gutentags'
-	let g:gutentags_ctags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
-		\ '*.phar', '*.ini', '*.rst', '*.md',
-		\ '*bin/*', '*vendor/*/test*', '*vendor/*/Test*',
-		\ '*vendor/*/fixture*', '*vendor/*/Fixture*', '*node_modules/*',
-		\ '*tmp/*', '*var/cache*', '*var/log*']
-endif
-
 " NERDComment
-if filereadable(expand("~/.vim/bundle/nerdcommenter/plugin/NERD_commenter.vim"))
+if filereadable(expand("~/.vim/plugged/nerdcommenter/plugin/NERD_commenter.vim"))
 	let NERDCommentEmptyLines = 1
 	let NERDDefaultAlign = 'left'
 	let NERDCommentWholeLinesInVMode = 1
@@ -437,7 +391,7 @@ if filereadable(expand("~/.vim/bundle/nerdcommenter/plugin/NERD_commenter.vim"))
 endif
 
 " NERDTree
-if filereadable(expand("~/.vim/bundle/nerdtree/plugin/NERD_tree.vim"))
+if exists(':NERDTreeToggle')
 	" Open NERDTree if no files were specified for vim startup
 	" autocmd vimenter * if !argc() | NERDTree | endif
 
@@ -454,63 +408,46 @@ if filereadable(expand("~/.vim/bundle/nerdtree/plugin/NERD_tree.vim"))
 	nnoremap <F3> :call ToggleNERDTreeFind()<CR>
 endif
 
-" QFEnter
-if filereadable(expand("~/.vim/bundle/QFEnter/plugin/QFEnter.vim"))
-	let g:qfenter_keymap = {}
-	let g:qfenter_keymap.vopen = ['<C-v>']
-	let g:qfenter_keymap.hopen = ['<C-CR>', '<C-s>', '<C-x>']
-	let g:qfenter_keymap.topen = ['<C-t>']
+" Markdown (folding)
+if filereadable(expand('~/.vim/plugged/vim-markdown/ftplugin/markdown.vim'))
+
+  let g:vim_markdown_folding_disabled = 0
+
+  augroup MarkdownFolds
+    autocmd!
+    autocmd FileType markdown setlocal foldmethod=expr
+    autocmd FileType markdown setlocal foldexpr=vim_markdown#foldexpr()
+    autocmd FileType markdown setlocal foldlevel=99
+  augroup END
+
+  augroup markdownfoldkeys
+	autocmd!
+	" + opens current fold, ++ opens all folds
+	autocmd FileType markdown nnoremap <buffer> <silent> +  zo
+	autocmd FileType markdown nnoremap <buffer> <silent> <kPlus>  zo
+	autocmd FileType markdown nnoremap <buffer> <silent> ++ zR
+	autocmd FileType markdown nnoremap <buffer> <silent> <kPlus><kPlus> zR
+	" - closes current fold, -- closes all folds
+	autocmd FileType markdown nnoremap <buffer> <silent> -  zc
+	autocmd FileType markdown nnoremap <buffer> <silent> <kMinus>  zc
+	autocmd FileType markdown nnoremap <buffer> <silent> -- zM
+	autocmd FileType markdown nnoremap <buffer> <silent> <kMinus><kMinus> zM
+  augroup END
+
 endif
 
-" Polyglot
-if filereadable(expand("~/.vim/bundle/vim-polyglot/ftdetect/polyglot.vim"))
-	" JavaScript and HTML indentation plugin settings
-	let html_indent_inctags = "html,body,head,tbody"
-	let html_indent_script1 = "inc"
-	let html_indent_style1 = "inc"
+" Tabular (table alignment)
+if filereadable(expand('~/.vim/plugged/tabular/plugin/Tabular.vim'))
 
-	" Syntax highlighting in PHP files
-	let php_sql_query=0
-	let php_parent_error_close=1
-	let php_parent_error_open=1
-	let php_htmlInStrings=0
-	let php_noShortTags=1
-	let php_folding=0
-endif
+  augroup MarkdownTabular
+    autocmd!
+    " Align markdown tables quickly: <leader>t
+    autocmd FileType markdown nnoremap <buffer> <silent> <leader>t <Cmd>Tabularize /\|<CR>
+  augroup END
 
-" Supertab
-if filereadable(expand("~/.vim/bundle/supertab/plugin/supertab.vim"))
-	" Close Scratch buffer when popup closes
-	let g:SuperTabClosePreviewOnPopupClose = 1
-
-	" Add omnicomplition to supertab if there is one
-	autocmd FileType *
-	\ if &omnifunc != '' |
-	\   call SuperTabChain(&omnifunc, "<c-n>") |
-	\ endif
-endif
-
-" Tagbar
-if filereadable(expand("~/.vim/bundle/tagbar/plugin/tagbar.vim"))
-	" Show tag bar
-	let g:tagbar_autofocus = 1
-	map <F9> :TagbarToggle<CR>
-endif
-
-" Tagbar PHP ctags
-if filereadable(expand("~/.vim/bundle/tagbar-phpctags.vim/plugin/tagbar-phpctags.vim"))
-	" Use phpctags for tagbar
-	let g:tagbar_phpctags_bin="~/bin/phpctags"
-endif
-
-" Zeal
-if filereadable(expand("~/.vim/bundle/zeavim.vim/plugin/zeavim.vim"))
-	" Zeal offline documentation
-	let g:zv_file_types = {'php':'cakephp,php'}
-	autocmd FileType php setlocal keywordprg=zeal
 endif
 
 " Cairo
-if filereadable(expand("~/.vim/bundle/cairo.vim/plugin/cairo.vim"))
-	let g:cairo_linter_autosave = 1
-endif
+" if filereadable(expand("~/.vim/bundle/cairo.vim/plugin/cairo.vim"))
+" 	let g:cairo_linter_autosave = 1
+" endif

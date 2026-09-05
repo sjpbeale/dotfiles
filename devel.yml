@@ -1,8 +1,8 @@
 # This playbook is for getting things which
 # are used for the development.
 ---
-- name: Development root setup
-  hosts: localhost
+- name: Development setup
+  hosts: all
   become: yes
   pre_tasks:
 
@@ -14,34 +14,25 @@
         rpms: "{{ devel_packages }}"
 
   roles:
-    - role: geerlingguy.composer
-    #- role: geerlingguy.redis
-    #- role: geerlingguy.memcached
-    #- role: sjpbeale.mongodb
-    - role: andrewrothstein.terraform
-    - role: geerlingguy.docker
-      docker_compose_version: '1.29.2'
+    - andrewrothstein.terraform
+    # - geerlingguy.composer
+    # - geerlingguy.redis
+    # - geerlingguy.memcached
+    # - sjpbeale.mongodb
+    # - geerlingguy.repo-epel
+    # - geerlingguy.repo-remi
+    # - geerlingguy.php
+    # - geerlingguy.docker
+    #   docker_compose_version: '1.29.2'
 
   post_tasks:
 
-    - name: Start MariaDB service
-      service: name=mariadb state=started enabled=true
+    # - name: Start MariaDB service
+    #   service: name=mariadb state=started enabled=true
 
-- name: Development user setup
-  hosts: localhost
-
-  roles: 
-    - role: stephdewit.nvm
-      nvm_version: 'latest'
-      nvm_node_version: 'lts'
-      nvm_install_deps: false
-      nvm_shell_init_file: '~/.bashrc'
-
-  post_tasks:
-
-    - name: Add User {{ ansible_user_id }} to Docker
-      become: yes
-      user:
-        name: "{{ ansible_user_id }}"
-        groups: docker
-        append: yes
+    # - name: Add User {{ ansible_user_id }} to Docker
+    #   become: yes
+    #   user:
+    #     name: "{{ ansible_user_id }}"
+    #     groups: docker
+    #     append: yes

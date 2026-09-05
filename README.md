@@ -4,6 +4,19 @@ DOTFILES
 This repository contains most of my "movable" setup.  Mostly these are configurations
 for bash shell, git version control, and Vim text editor.
 
+
+Prerequisites
+-------------
+
+This setup can work on a variety of systems (RedHat-based especially).  However, I
+mostly use it for my workstation, which runs:
+
+- Fedora 44 (or whatever is the latest at the time)
+- Python 3
+- Ansible (ansible-core)
+- Vim 9
+
+
 Installation
 ------------
 
@@ -20,8 +33,11 @@ Run Ansible
 
 ```
 $ ansible-galaxy install -r requirements.yml
-$ ansible-playbook all.yml -K
+$ ansible-galaxy collection install -r collections/requirements.yml
+$ ansible-playbook all.yml
 ```
+
+You will be prompted for your sudo (become) password when needed.
 
 You can skip package installations and/or network operations (Vim plugins cloning, etc)
 with something like:
@@ -33,6 +49,28 @@ $ ansible-playbook all.yml --skip-tags="network,packages"
 If you want to install/configure only certain parts, replace `all.yml` in the commands
 above with of the other playbooks.
 
+Playbooks
+---------
+
+The following playbooks are available:
+* `base.yml` - this is the safest and simplest base setup. Recommended for the first use.
+* `devel.yml` - installs some of the developer tools, such as PHP, Composer, and MySQL
+* `desktop.yml` - installs and configures my GUI desktop (MATE and i3)
+* `all.yml` - installs everything from the above playbooks
+
+On Fedora, `desktop.yml` installs the complete MATE desktop environment and the
+Xorg server, installs Slack and Telegram Desktop from Flathub, then configures
+MATE to use i3 as its window manager.  After installation, log out, select
+**MATE** from GDM's session chooser (the gear menu), and log back in.  The entry
+is named MATE even though i3 replaces MATE's default window manager.
+
+MATE's panels are treated as dock windows and remain visible during normal i3
+use.  An application put into i3 fullscreen mode intentionally covers those
+panels; press **Mod+F** to toggle fullscreen off.  This is runtime workspace
+state, not a session setup option, so it should not be forced from the
+playbook.
+
+
 Features
 --------
 
@@ -40,8 +78,8 @@ Here is a brief overview of some of the features hidden deep in these dotfiles.
 
 ### Bash shell
 
-1.	Colorful prompt, featuring current time, username, hostname, working directory, as wel as Git information.
-	When working whitin in git repository, the prompt will show the name of the current git branch, as well as 
+1.	Colorful prompt, featuring current time, username, hostname, working directory, as well as Git information.
+	When working within a Git repository, the prompt will show the name of the current git branch, as well as 
 	a little "M" flag, if the working directory is dirty (if it was modified).  The prompt will also change
 	background color from blue to red, when working as root user, provided you have installed dotfiles for both
 	your normal user and root.
@@ -59,7 +97,7 @@ Here is a brief overview of some of the features hidden deep in these dotfiles.
 
 ### Vim text editor
 
-1.	Modular configuration of plugins with Pathogen plugin and git submodules.
+1.	Plugin management with vim-plug.
 2.  Collection of plugins for web developers (PHP Indent, NERDTree, Syntastic, Tagbar, Gist, etc).
 3.	Support for 256 colors in console.
 
