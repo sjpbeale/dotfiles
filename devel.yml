@@ -14,7 +14,7 @@
         rpms: "{{ devel_packages }}"
 
   roles:
-    - andrewrothstein.terraform
+    # - andrewrothstein.terraform
     # - geerlingguy.composer
     # - geerlingguy.redis
     # - geerlingguy.memcached

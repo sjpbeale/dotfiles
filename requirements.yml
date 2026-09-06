@@ -5,7 +5,7 @@
 #
 - src: geerlingguy.repo-epel
 - src: geerlingguy.repo-remi
-- src: andrewrothstein.terraform
+# - src: andrewrothstein.terraform
 # - src: geerlingguy.php
 # - src: geerlingguy.composer
 # - src: geerlingguy.docker
